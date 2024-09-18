@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   #Routes for authentication
   post '/login', to: 'users#login'
   post '/logout', to: 'users#logout'
-  post '/create', to: 'users#create'
+  post '/register', to: 'users#create'
   post '/view', to: 'users#view'
   post '/update', to: 'users#update'
   

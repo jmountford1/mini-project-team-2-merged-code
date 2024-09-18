@@ -3,7 +3,7 @@ class TodosController < ApplicationController
     before_action :set_todo, only: %i[show update destroy]
 
     def create
-        # Initialize a new Todo with the parameters, including the current user's ID
+        #initialize a new Todo with the parameters, including the current user's ID
         @todo = Todo.new(todo_params.merge(user_id: @current_user.id))
         
         if @todo.save
@@ -50,23 +50,24 @@ class TodosController < ApplicationController
     private
     #format the todo item
     def todo_params
-        params.require(:todo).permit(:title, :content, :priority, :user_id, :completed)
+        params.require(:todo).permit(:title, :content, :priority, :id, :completed, :due_date)
     end
     #find the todo item
     def set_todo
         @todo = Todo.find(params[:id])
     end
-      # Authenticate the user by decoding the JWT
+      #authenticate by decoding JWT
       def authenticate_user
         auth_header = request.headers['Authorization']
         if auth_header
           token = auth_header.split(' ')[1]
           begin
             decoded_token = JWT.decode(token, 'j1FnHqRPD2ZRr0hyg6r8SNAjPq5ZoxQy', true, algorithm: 'HS256')
-            # Ensure you are referencing the correct key name
-            user_id = decoded_token[0]['USER_ID']['user_id']
+            user_id = decoded_token[0]['USER_ID']
             @current_user = User.find(user_id)
-          rescue JWT::DecodeError
+          rescue JWT::DecodeError => e
+            Rails.logger.error "JWT DecodeError: #{e.message}"
+            Rails.logger.error "Invalid token: #{token}"
             render json: { error: 'Invalid token. Please login again.' }, status: :unauthorized
           end
         else

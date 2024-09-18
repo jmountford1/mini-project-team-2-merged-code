@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to [Your App Name]</title>
+</head>
+<body>
+  <h1>Welcome to [Your App Name], <%= @user.username %>!</h1>
+  <p>Hi <%= @user.username %>,</p>
+  <p>We are excited to have you join our community. Your account has been successfully created.</p>
+  <p>Here are your login details:</p>
+  <ul>
+    <li><strong>Email:</strong> <%= @user.email %></li>
+    <li><strong>Username:</strong> <%= @user.username %></li>
+  </ul>
+  <p>To get started, click the button below to log in:</p>
+  <a href="<%= @login_url %>" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Log in</a>
+  <p>If you have any questions, feel free to reach out to our support team at support@yourapp.com.</p>
+  <p>Thank you for choosing [Your App Name]!</p>
+</body>
+</html>
