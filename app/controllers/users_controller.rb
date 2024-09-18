@@ -1,6 +1,8 @@
 require 'jwt'
 
 class UsersController < ApplicationController
+  before_action :authenticate_user, only: %i[show update logout]
+
     def new
     end
 
@@ -38,10 +40,43 @@ class UsersController < ApplicationController
       end
     end
 
+    def view
+      render json: { user: @current_user}, status: :ok
+    end
+
+    def update
+      user_params = params.permit(:email, :username, :password)
+      if @current_user.update(user_params)
+        render json: { message: 'Profile Updated', user: @current_user }, status: :ok
+      else
+        render json: { error: 'Failed to update user', details: user.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+
     #placeholder - update later
     def encode_token(user_id)
       # Your method to encode JWT tokens
       JWT.encode({ LOGGED_IN: true, USER_ID: user_id }, 'j1FnHqRPD2ZRr0hyg6r8SNAjPq5ZoxQy', 'HS256')
     end
     
+    def authenticate_user
+      auth_header = request.headers['Authorization']
+      if auth_header
+        token = auth_header.split(' ')[1]
+        begin
+          decoded_token = JWT.decode(token, 'j1FnHqRPD2ZRr0hyg6r8SNAjPq5ZoxQy', true, algorithm: 'HS256')
+          # Ensure you are referencing the correct key name
+          user_id = decoded_token[0]['user_id']
+          @current_user = User.find(user_id)
+        rescue JWT::DecodeError
+          render json: { error: 'Invalid token. Please login again.' }, status: :unauthorized
+        end
+      else
+        render json: { error: 'Token missing. Please login again.' }, status: :unauthorized
+      end
+    end
+
 end

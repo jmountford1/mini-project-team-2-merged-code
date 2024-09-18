@@ -15,12 +15,14 @@ Rails.application.routes.draw do
   post '/login', to: 'users#login'
   post '/logout', to: 'users#logout'
   post '/create', to: 'users#create'
-
+  post '/view', to: 'users#view'
+  post '/update', to: 'users#update'
   
   #Routes for handling TODO items
   post '/create-todo', to: 'todos#create'
   post '/delete-todo', to: 'todos#destroy'
   post '/update-todo', to: 'todos#update'
   post '/query-todos', to: 'todos#search'
+  
 
 end
