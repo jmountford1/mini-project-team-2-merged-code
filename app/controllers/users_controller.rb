@@ -1,7 +1,8 @@
 require 'jwt'
 
 class UsersController < ApplicationController
-  before_action :authenticate_user, only: %i[show update logout]
+  before_action :authenticate_user, only: %i[update]
+  skip_before_action :authenticate_user, only: %i[login]
 
     def new
     end
